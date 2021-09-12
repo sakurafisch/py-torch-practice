@@ -1,9 +1,17 @@
+import sys
 import torch
 from torch.utils.data import DataLoader, dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor, Lambda, Compose
 import matplotlib.pyplot as plt
 from NeuralNetwork import NeuralNetwork
+
+help_info: str = """
+1. --info, --help    打印此帮助信息
+2. --train           训练并保存模型
+4. --test            加载模型并测试
+5. --all             训练并测试
+"""
 
 def download_data() -> tuple[datasets.FashionMNIST, datasets.FashionMNIST]:
     # Downloading training data from open datasets
@@ -45,7 +53,7 @@ def init_model() -> NeuralNetwork:
     print(f"Using {device} device")
     return NeuralNetwork().to(device=device)
 
-def save_model() -> None:
+def save_model(model: NeuralNetwork) -> None:
     torch.save(model.state_dict(), "model.pth")
     print("Saved PyTorch Model State to model.pth")
 
@@ -111,8 +119,8 @@ def custom_test(model: NeuralNetwork, test_data: datasets.FashionMNIST) -> None:
         predicted, actual = classes[pred[0].argmax(0)], classes[y]
         print(f'Predicted: "{predicted}", Actual: "{actual}"')
 
-if __name__ == '__main__':
-    training_data, test_data = download_data()
+
+def argv_train(training_data: datasets.FashionMNIST, test_data: datasets.FashionMNIST):
     train_dataloader, test_dataloader = prepare_dataloader(training_data, test_data)
     print_dataloader(train_dataloader)
     print_dataloader(test_dataloader)
@@ -126,7 +134,28 @@ if __name__ == '__main__':
         train(train_dataloader, model, loss_fn, optimizer)
         test(test_dataloader, model, loss_fn)
     print("Done!")
-    save_model()
+    save_model(model)
+
+
+def argv_test(test_data: datasets.FashionMNIST):
     loaded_model: NeuralNetwork = load_model()
     custom_test(model=loaded_model, test_data=test_data)
+
+if __name__ == '__main__':
+    training_data, test_data = download_data()
+    if len(sys.argv) >= 2:
+        if sys.argv[1] == '--info' or sys.argv[1] == '--help':
+            print(help_info)
+        elif sys.argv[1] == '--train':
+            argv_train(training_data, test_data)
+        elif sys.argv[1] == '--test':
+            argv_test(test_data)
+        elif sys.argv[1] == '--all':
+            argv_train(training_data, test_data)
+            argv_test(test_data)
+        else:
+            print('不支持的命令行参数：', sys.argv[1])
+            print('请使用--help查看可用的参数列表')
+    else:
+        print(help_info)
     exit

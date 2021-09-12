@@ -118,9 +118,9 @@ if __name__ == '__main__':
     print_dataloader(test_dataloader)
     model: NeuralNetwork = init_model()
     print(model)
-    loss_fn = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
-    epochs = 5
+    loss_fn: torch.nn.CrossEntropyLoss = torch.nn.CrossEntropyLoss()
+    optimizer: torch.optim.SGD = torch.optim.SGD(model.parameters(), lr=1e-3)
+    epochs: int = 5
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         train(train_dataloader, model, loss_fn, optimizer)

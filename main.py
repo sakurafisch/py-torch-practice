@@ -91,7 +91,7 @@ def test(dataloader: DataLoader, model: NeuralNetwork, loss_fn: torch.nn.Module)
     correct /= size
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}, Avg loss: {test_loss:>8f} \n")
 
-def custom_test(model: NeuralNetwork, test_data: datasets.FashionMNIST):
+def custom_test(model: NeuralNetwork, test_data: datasets.FashionMNIST) -> None:
     classes = [
         "T-shirt/top",
         "Trouser",

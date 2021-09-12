@@ -4,12 +4,14 @@
 
 win
 ```cmd
-pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio===0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+python -m pip install --upgrade pip
+python -m pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio===0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 ```
 
 linux
 ```zsh
-pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+python -m pip install --upgrade pip
+python -m pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 ```
 
 Verification
@@ -39,5 +41,7 @@ torch.cuda.is_available()
 ## Run
 
 ```zsh
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 python main.py
 ```

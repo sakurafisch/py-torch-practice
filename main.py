@@ -7,7 +7,7 @@ from NeuralNetwork import NeuralNetwork
 
 def download_data() -> tuple[datasets.FashionMNIST, datasets.FashionMNIST]:
     # Downloading training data from open datasets
-    training_data = datasets.FashionMNIST(
+    training_data: datasets.FashionMNIST = datasets.FashionMNIST(
         root = "data",
         train = True,
         download = True,
@@ -15,7 +15,7 @@ def download_data() -> tuple[datasets.FashionMNIST, datasets.FashionMNIST]:
     )
 
     # Downloading test data from open datasets
-    test_data = datasets.FashionMNIST(
+    test_data: datasets.FashionMNIST = datasets.FashionMNIST(
         root = "data",
         train = False,
         download = True,
@@ -25,11 +25,11 @@ def download_data() -> tuple[datasets.FashionMNIST, datasets.FashionMNIST]:
     return training_data, test_data
 
 def prepare_dataloader(training_data: datasets.FashionMNIST, test_data: datasets.FashionMNIST) -> tuple[DataLoader, DataLoader]:
-    batch_size = 64
+    batch_size: int = 64
 
     # Create data loaders.
-    train_dataloader = DataLoader(dataset=training_data, batch_size=batch_size)
-    test_dataloader = DataLoader(dataset=test_data, batch_size=batch_size)
+    train_dataloader: DataLoader = DataLoader(dataset=training_data, batch_size=batch_size)
+    test_dataloader: DataLoader = DataLoader(dataset=test_data, batch_size=batch_size)
 
     return train_dataloader, test_dataloader
 
@@ -41,7 +41,7 @@ def print_dataloader(dataloader: DataLoader) -> None:
     return
 
 def init_model() -> NeuralNetwork:
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using {device} device")
     return NeuralNetwork().to(device=device)
 
@@ -56,15 +56,15 @@ def load_model() -> NeuralNetwork:
     return model
 
 def train(dataloader: DataLoader, model: NeuralNetwork, loss_fn: torch.nn.Module, optimizer: torch.optim.Optimizer) -> None:
-    size = len(dataloader.dataset)
+    size: int = len(dataloader.dataset)
     model.train()
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda" if torch.cuda.is_available() else "cpu"
     for batch, (X, y) in enumerate(dataloader):
         X, y = X.to(device), y.to(device)
     
         # Compute prediction error
-        pred = model(X)
-        loss = loss_fn(pred, y)
+        pred: torch.nn.Sequential = model(X)
+        loss: torch.Tensor = loss_fn(pred, y)
 
         # Backpropagation
         optimizer.zero_grad()
@@ -76,15 +76,15 @@ def train(dataloader: DataLoader, model: NeuralNetwork, loss_fn: torch.nn.Module
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
 def test(dataloader: DataLoader, model: NeuralNetwork, loss_fn: torch.nn.Module) -> None:
-    size = len(dataloader.dataset)
-    num_batches = len(dataloader)
+    size: int = len(dataloader.dataset)
+    num_batches: int = len(dataloader)
     model.eval()
     test_loss, correct = 0, 0
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda" if torch.cuda.is_available() else "cpu"
     with torch.no_grad():
         for X, y in dataloader:
             X, y = X.to(device), y.to(device)
-            pred = model(X)
+            pred: torch.nn.Sequential = model(X)
             test_loss += loss_fn(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches
